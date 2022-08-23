@@ -207,14 +207,17 @@ class CodiceFiscale
             return;
         }
 
-        if (!array_key_exists($this->getBirthPlace(), $this->cityDecoder->getList())) {
+        $decoderClass = config('codicefiscale.city-decoder');
+        $decoder = new $decoderClass;
+
+        if (!array_key_exists($this->getBirthPlace(), $decoder->getList())) {
             throw new CodiceFiscaleValidationException(
                 'Invalid codice fiscale',
                 CodiceFiscaleValidationException::MISSING_CITY_CODE
             );
         }
 
-        return ucwords(strtolower($this->cityDecoder->getList()[$this->getBirthPlace()]));
+        return ucwords(strtolower($decoder->getList()[$this->getBirthPlace()]));
     }
 
     public function getBirthdate(): Carbon
